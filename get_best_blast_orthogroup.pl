@@ -22,10 +22,10 @@ while (<Blast_top10>) {
                 $info1.=$a[$i]."\t";
         }
     $info1=~s/$\t//;
-    $info2=$a[1]."\t".$a[0]."\t".$info1;
+    $info2=$a[1]."\t".$a[0]."\t".$info1; # get transcript info of per protein 
     $info1="";
-        if ($info{$pro}->{$spec}) {
-                if ($info{$pro}->{$spec}->{eval} < $eval) { # if the new e-value is lower, save the new one
+        if ($info{$pro}->{$spec}) {  # get the best hit of each protein in each species 
+                if ($info{$pro}->{$spec}->{eval} < $eval) { # if the new e-value is lower, update the info of protein of species
                         $info{$pro}->{$spec}={
                                 tran => $tran,
                                 eval => $eval,
