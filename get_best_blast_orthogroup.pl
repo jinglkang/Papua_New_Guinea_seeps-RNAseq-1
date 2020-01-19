@@ -1,3 +1,4 @@
+use File::Basename;
 open Blast_result, "$ARGV[0]"; # open blast result file
 open Blast_top10, ">blast_top10.txt"; # save the top10 hit per transcript to this file
 while (<Blast_result>) {
@@ -40,7 +41,7 @@ while (<Blast_top10>) {
                 };
         }
 }
-@specs=("Apoly","Padel","Daru","Acura","Ocomp"); # get the best hit: protein to species;
+@specs=("Apoly","Padel","Daru","Acura","Ocomp"); # get the best hit of each protein of these species;
 foreach $key (keys %info) {
         foreach $spec (@specs) {
                 if ($info{$key}->{$spec}) {
@@ -48,7 +49,7 @@ foreach $key (keys %info) {
                 }
         }
 }
-open Best_pro_tra, "blast_best_pro_tra.txt"; # esure protein has hit to each species
+open Best_pro_tra, "blast_best_pro_tra.txt"; # obtain proteins that has a best hit to all species
 open spec_5, ">blast_best_pro_tra_5_spec.txt";
 while (<Best_pro_tra>) {
         chomp;
@@ -74,7 +75,7 @@ while (<Best_pro_tra>) {
                 info => $_
         };}
 }
-foreach $key (keys %info1) {
+foreach $key (keys %info1) {  # select if the protein has best hits to all five species
         if ($info1{$key}->{num_spec}==4) {
                 $ave_eval=($info1{$key}->{eval})/5;
                 if ($ave_eval < 1E-30) {
@@ -82,7 +83,7 @@ foreach $key (keys %info1) {
                         }
         }
 }
-open spec_5, "blast_best_pro_tra_5_spec.txt";
+open spec_5, "blast_best_pro_tra_5_spec.txt"; # get the best one if we get more than one final protein according to the blast score
 open fil1, ">temp";
 while (<spec_5>) {
     chomp;
@@ -126,4 +127,7 @@ $final=$infor{$name};
 $final=~s/\t\d+$//;
 $final=~s/^\s+//;
 $final=~s/\tsp/\nsp/g;
-print "$final\n";
+$orth=basename($ARGV[0]);
+open orth_gr, ">$orth";
+print orth_gr "$final\n"; # save the final blast result to a new file
+`rm blast_top10.txt blast_best_pro_tra.txt blast_best_pro_tra_5_spec.txt temp`; # delete all of the temp files
