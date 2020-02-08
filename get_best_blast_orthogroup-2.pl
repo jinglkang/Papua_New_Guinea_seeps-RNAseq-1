@@ -27,7 +27,7 @@ foreach my $mat (@matrix) {
         $numb{$fish}->{$a[0]}=$read_num;
     }
 }
-my @blast = <$blast_result/*blastp.result>; # get blast result from blast result directory
+my @blast = <$blast_result/*blastp_result>; # get blast result from blast result directory
 foreach my $blast(@blast) {
     open Blast_result, "$blast" or die "cannot open $blast"; # open blast result file
     open Blast_top10, ">blast_top10.txt" or die "cannot open blast_top10.txt"; # save the top10 hit per transcript to this file
@@ -192,7 +192,7 @@ foreach my $blast(@blast) {
     print orth_gr "$final\n" if defined $final;
     `rm blast_top10.txt blast_pro_tra.txt blast_pro_tra_spec_most_reads.txt blast_best_pro_tra_6_spec.txt temp`; # delete all of the temp files
 }
-my @files=<final_blast_orth_group/*.result>;
+my @files=<final_blast_orth_group/*result>;
 foreach my $file (@files) {
     if (-z $file) {
         `rm $file`; # delete the empty files
