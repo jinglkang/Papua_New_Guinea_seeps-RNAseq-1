@@ -31,6 +31,8 @@ foreach my $fa (@fas) {
 my @blasts=<$blast_result/*result>;
 mkdir $output;
 foreach my $blast (@blasts) {
+        my $file=basename($blast);
+        (my $orth)=$file=~/(.*)\.blastp\_result/;
         open "fil", "$blast";
         while (<fil>) {
                 chomp;
@@ -39,7 +41,7 @@ foreach my $blast (@blasts) {
                 $a[1]=~s/\s+$//;
                 my $ref=$spec.".fa";
                 open $spec, ">>$output/$ref";
-                my $info="$a[0]"."\t"."$a[1]";
+                my $info=$orth."\t".$a[0]."\t".$a[1];
                 print $spec ">$info\n$seq{$spec}->{$a[1]}\n" if defined $seq{$spec}->{$a[1]};
         }
 }
