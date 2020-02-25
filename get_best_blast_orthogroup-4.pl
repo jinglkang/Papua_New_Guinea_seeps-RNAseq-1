@@ -167,12 +167,12 @@ foreach my $blast(@blast) {
         s/^\s+//;
         ($name)=$a[0]=~/(sp)\|.*/;
         if ($score{$name}) {
-            if ($score{$name} < $a[-2]) {
+            if ($score{$name} < $a[-1]) {
                 $info3{$name}=$_;
-                $score{$name}=$a[-2];
+                $score{$name}=$a[-1];
             }
         } else {
-            $score{$name}=$a[-2];
+            $score{$name}=$a[-1];
             $info3{$name}=$_;}
     }
     my $final="";
