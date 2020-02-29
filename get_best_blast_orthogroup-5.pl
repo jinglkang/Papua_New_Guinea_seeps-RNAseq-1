@@ -60,9 +60,9 @@ foreach my $blast(@blast) {
         $info1=~s/\t$//;
         my $info2=$a[1]."\t".$a[0]."\t".$info1; # get transcript info of per protein
         # select the best blast result if a transcript were blasted to different position of the same protein
-        if ((defined $info{$pro}->{$spec}->{$tran}->{eval} >= $a[-2]) || !defined $info{$pro}->{$spec}->{$tran}) {
+        if ((defined $info{$pro}->{$spec}->{$tran} && $info{$pro}->{$spec}->{$tran}->{eval} >= $a[-2]) || (!defined $info{$pro}->{$spec}->{$tran})) {
                     $info{$pro}->{$spec}->{$tran}={
-                        eval => $eval,
+                        eval => $a[-2],
                         info => $info2,
                         read_um => $numb{$spec}->{$tran}
                     };
