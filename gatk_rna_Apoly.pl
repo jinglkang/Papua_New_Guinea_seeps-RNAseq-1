@@ -168,7 +168,7 @@ sub filter_snp {
     # MQ: "RMS (root mean square) of the mapping quality of reads across all samples"; should more than 40
     $filter .= '--filterName "failed MQ" --filterExpression "MQ < 40.0" ';
     # FS: "phred-scaled p-value using Fisher's exact test to detect strand bias"; should more than 60
-    $filter .= '--filterName "failed FS" --filterExpression "FS > 60.0"';
+    $filter .= '--filterName "failed FS" --filterExpression "FS > 60.0" ';
     # MQ0: "Total Mapping Quality Zero Reads"; MP0 should not more than 4 and variants for which reads with 0 mapping quality constitute 
     # should not more than 10%
     $filter .= '--filterName "failed 10% reads MQ0" --filterExpression "MQ0 >= 4 && MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)"';
