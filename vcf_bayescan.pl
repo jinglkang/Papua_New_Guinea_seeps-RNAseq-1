@@ -141,7 +141,8 @@ sub write_info_according_loci {
             if ($allel_num{$allel}) {
                 $info.=$allel_num{$allel}." ";
                 } elsif (! $allel_num{$allel}) {
-                    $info="0";
+                    $allel_num{$allel}=0;
+                    $info.=$allel_num{$allel}." ";
                 }
         }
         $info=~s/\s+$//;
