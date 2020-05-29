@@ -75,8 +75,9 @@ print "[populations]=$pop_num\n\n";
 
 my @samp_pop;
 my $gene_num;
+my $i=0;
 foreach my $pop (keys %pop) {
-    my $i++;
+    $i++;
     $pop{$pop}=~s/\s+$//;
     $pop{$pop}=~s/^\s+//;
     print "[pop]=$i\n";
