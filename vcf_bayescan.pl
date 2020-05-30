@@ -22,7 +22,7 @@ my %genetype=();
 open VCF, "$vcf" or die "cannot open $vcf\n";
 while (<VCF>) {
         chomp;
-        if (/^##GATKCommandLine/) {
+        if (/^##GATKCommandLine/) { # get the sample in the merged vcf
             my $variant="";
             ($variant)=$_=~/variant=(\[.*\])\s+out\=/;
             my @variant=split /\,/, $variant if $variant;
@@ -42,7 +42,8 @@ while (<VCF>) {
             my $loci=$a[0]."_".$a[1];
             push @loci, $loci;
             my $j=0;
-            for (my $i = -19; $i <= -1; $i++) {
+            my $sample_num=scalar(keys %hash);
+            for (my $i = -$sample_num; $i <= -1; $i++) {
                 $j++;
                 my @b=split /\:/, $a[$i];
                 $genetype{$hash{$j}}->{$loci}=$b[0];
