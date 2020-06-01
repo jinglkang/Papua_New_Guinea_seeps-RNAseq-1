@@ -26,7 +26,7 @@ while (<VCF>) {
             my $i=0;
             foreach my $var (@variant) {
                 $i++;
-                (my $sample)=$var=~/name=(.*)\ssource=/;
+                (my $sample)=$var=~/name=(.*)\.1\ssource=/;
                 $sample=~s/^\s+//;
                 $sample=~s/\s+$//;
                 $hash{$i}=$sample;
@@ -39,8 +39,9 @@ while (<VCF>) {
             my @a=split;
             my $loci=$a[0]."_".$a[1];
             push @loci, $loci;
+            my $sample_num=scalar(keys %hash);
             my $j=0;
-            for (my $i = -19; $i <= -1; $i++) {
+            for (my $i = -$sample_num; $i <= -1; $i++) {
                 $j++;
                 my @b=split /\:/, $a[$i];
                 $genetype{$hash{$j}}->{$loci}=$b[0];
