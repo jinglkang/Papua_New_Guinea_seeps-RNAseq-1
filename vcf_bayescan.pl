@@ -52,7 +52,7 @@ while (<VCF>) {
 }
 
 my $loci_num=@loci;
-print "loci]=$loci_num\n\n";
+print "[loci]=$loci_num\n\n";
 
 my %pop=();
 my @sample=();
