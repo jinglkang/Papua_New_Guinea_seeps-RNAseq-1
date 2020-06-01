@@ -29,7 +29,7 @@ while (<VCF>) {
             my $i=0;
             foreach my $var (@variant) {
                 $i++;
-                (my $sample)=$var=~/name=(.*)\ssource=/;
+                (my $sample)=$var=~/name=(.*)\.1\ssource=/;
                 $sample=~s/^\s+//;
                 $sample=~s/\s+$//;
                 $hash{$i}=$sample;
