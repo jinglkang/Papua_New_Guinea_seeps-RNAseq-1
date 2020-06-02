@@ -4,11 +4,12 @@ use File::Basename;
 use Getopt::Long;
 
 my $opt = GetOptions( 'vcf:s', \ my $vcf,
-    'pop_def:s', \ my $pop_def);
+    'pop_def:s', \ my $pop_def,
+    'loci:s', \my $loci);
 
 if (!($vcf)) {
     print STDERR "\nExample usage:\n";
-    print STDERR "\n$0 --vcf \"vcf file\" --pop_def \"which sample in which population\" \n\n";
+    print STDERR "\n$0 --vcf \"vcf file\" --pop_def \"which sample in which population\" --loci \"loci file\"\n\n";
     exit;
 }
 my @loci=();
@@ -49,8 +50,16 @@ while (<VCF>) {
         }
 }
 
+my @loci_need;
+open LOCI, "$loci" or die "cannot open $loci\n";
+while (<LOCI>) {
+    chomp;
+    my @a=split;
+    push @loci_need, $a[0];
+}
+
 my $header;
-foreach my $loci (@loci) { # print the header of output (all loci)
+foreach my $loci (@loci_need) { # print the header of output (all loci)
     $header.=$loci."\t";
 }
 $header=~s/\s+$//;
@@ -77,7 +86,7 @@ foreach my $pop (sort keys %pop) { # print the genetype of loci in samples accor
 sub write_genetype_sample {
     foreach my $sample (@samp_pop) {
         my $total_genetype="";
-        foreach my $loci (@loci) {
+        foreach my $loci (@loci_need) {
             my $genetype=$genetype{$sample}->{$loci};
             $total_genetype.=$genetype."\t";
         }
