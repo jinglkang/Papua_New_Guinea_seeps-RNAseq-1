@@ -37,7 +37,7 @@ while (<VCF>) {
         }
         if (/^#/) {
             next;
-        } elsif (/PASS/) {
+        } elsif (/PASS/) { # only extract the snp with the "PASS" flag
             my @a=split;
             my $loci=$a[0]."_".$a[1];
             push @loci, $loci;
@@ -51,40 +51,41 @@ while (<VCF>) {
         }
 }
 
-my $loci_num=@loci;
-print "[loci]=$loci_num\n\n";
-
 my %pop=();
 my @sample=();
 my %allel_type=();
 my %allel_num=();
+my @new_loci=();
 open POP, "$pop_def" or die "cannot open $pop_def\n";
 while (<POP>) {
     chomp;
     s/^\s+//;
     s/\s+$//;
     my @a=split;
-    push @sample, $a[0];
-    $pop{$a[1]}.=$a[0]."\t";
+    push @sample, $a[0]; # get all samples
+    $pop{$a[1]}.=$a[0]."\t"; # get the samples in each population
 }
 
+# get the total allel types of all individuals in each loci
+&get_allel_from_all_sample();
+
+my $loci_num=@new_loci;
+print "[loci]=$loci_num\n\n";
 my $pop_num=scalar(keys %pop);
 print "[populations]=$pop_num\n\n";
 
-# get the total genetype of each loci in all individuals
-&get_allel_from_all_sample();
-
 my @samp_pop;
 my $gene_num;
-my $i=0;
+my $j=0;
 foreach my $pop (keys %pop) {
-    $i++;
+    $j++;
     $pop{$pop}=~s/\s+$//;
     $pop{$pop}=~s/^\s+//;
-    print "[pop]=$i\n";
+    print "[pop]=$j\n";
     @samp_pop=split /\t/, $pop{$pop};
     $gene_num=2*@samp_pop;
     &write_info_according_loci();
+    print "\n";
 }
 
 
@@ -98,22 +99,25 @@ sub get_allel_from_all_sample {
             $gtype=$genetype{$sample}->{$loci};
             my @allel=split /\//, $gtype;
             foreach my $allel (@allel) {
-                if ($hash{$allel} && $hash{$allel} >1) {
+                if ($hash{$allel} && $hash{$allel} >=1) {
                     $hash{$allel}++;
                 } elsif (!$hash{$allel}) {$hash{$allel}=1}
             }
         }
-        my @allel_type=sort {$a<=>$b} keys %hash;
-        @{$allel_type{$loci}}=@allel_type;
+        my @allel_type=sort {$a<=>$b} keys %hash; # get the total allel types in this loci
+        if (@allel_type > 1) { # only the total allel types are more than 1 will be considered as informative snp loci
+            push @new_loci, $loci;
+        }
+        @{$allel_type{$loci}}=@allel_type; # @{$allel_type{$loci}} store the total allel types
     }
 }
 
 sub write_info_according_loci {
     my $i=0;
-    foreach my $loci (@loci) {
+    foreach my $loci (@new_loci) { # only write the information of informative loci
         $i++;
         my %hash2=();
-        foreach my $sample (@samp_pop) {
+        foreach my $sample (@samp_pop) { # estimate the number of each genetype according to population
             my $gtype;
             $gtype=$genetype{$sample}->{$loci};
             if ($hash2{$gtype} && $hash2{$gtype}>=1) {
@@ -124,7 +128,7 @@ sub write_info_according_loci {
         }
 
         my %allel_num=();
-        foreach my $key (sort keys %hash2) {
+        foreach my $key (sort keys %hash2) { # estimate the allel number according genetype
             my @a=split /\//, $key;
             for (my $i = 0; $i < @a; $i++) {
                 if ($allel_num{$a[$i]}) {
@@ -135,6 +139,7 @@ sub write_info_according_loci {
             }
         }
 
+        # write the allel number according to all the allel types in all populations
         my $allel_total_type=@{$allel_type{$loci}};
         my @allel=@{$allel_type{$loci}};
         my $info="";
@@ -149,6 +154,7 @@ sub write_info_according_loci {
         $info=~s/\s+$//;
         print "$i $gene_num $allel_total_type $info\n";
         open COR, ">>$cor_tab";
-        print COR "$loci $i\n";
+        # save the corresponding table of the number in bayescan and ortholog id
+        print COR "$loci $i\n" if $j==1;
     }
 }
