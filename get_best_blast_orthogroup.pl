@@ -184,7 +184,7 @@ foreach my $blast(@blast) {
     $final=~s/^\s+// if defined $final;
     $final=~s/\tsp/\nsp/g if defined $final;
     $orth=basename($blast);
-    my $final_blast_orth_group="final_blast_orth_group_4";
+    my $final_blast_orth_group="final_blast_orth_group";
     unless (-f $final_blast_orth_group) { # if there is no directory of $final_blast_orth_group, mkdir it
         mkdir $final_blast_orth_group;
     }
@@ -192,7 +192,7 @@ foreach my $blast(@blast) {
     print orth_gr "$final\n" if defined $final;
     `rm blast_top10.txt blast_pro_tra.txt blast_pro_tra_spec_most_reads.txt blast_best_pro_tra_6_spec.txt temp`; # delete all of the temp files
 }
-my @files=<final_blast_orth_group_4/*result>;
+my @files=<final_blast_orth_group/*result>;
 foreach my $file (@files) {
     if (-z $file) {
         `rm $file`; # delete the empty files
