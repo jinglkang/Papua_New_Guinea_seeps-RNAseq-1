@@ -10,7 +10,7 @@ cd Acura_gatk
 nohup perl gatk_rna.pl --fasta ./Acura.fa --bam . --tmp tmp --output Acura_gatk >Acura_gatk.process 2>&1 &  
 cd ./Acura_gatk
 vi temp1.pl
-#### vcf SNPs file：keep loci with "PASS" flag, maximun heterozygosity <=0.8 and minor allele frequency >=0.1    
+#### vcf SNPs file：keep loci with "PASS" flag, maximun heterozygosity <0.8 and minor allele frequency >=0.1    
 use List::Util qw/max min/;  
 open fil, "$ARGV[0]";  
 while (<fil>) {  
@@ -52,7 +52,7 @@ while (<fil>) {
                         @hash=keys %hash;  
                         $num=@hash;  
                         #       print "$num\n";  
-                        print "$_\n" if $num>1 && $het_max<=0.8 && $MAF >=0.1;  
+                        print "$_\n" if $num>1 && $het_max<0.8 && $MAF >=0.1;  
                         #                        print "$num\t$het_max\t$MAF\n";  
                 }  
         }  
