@@ -45,12 +45,12 @@ nohup perl blastp_uni.pl Orthogroups/Orthogroups.GeneCount.tsv >blast_process 2>
   
 
 ###########################################################################################  
-## 3. Seltect the most representative transcript for each species in each orthologous group
+## 3. Seltect the most representative transcript for each species in each orthologous group  
 ###########################################################################################  
 
-##################################################################################################################################  
+########################################################################################### 
 ### 3.1 generate reads number matrix for each species based on nucleotide sequences of predict ORFs in the _de novo_ transcriptome  
-##################################################################################################################################  
+###########################################################################################   
 apoly: apoly_swath_Proteome.fasta (pep);   
 apoly_primary_transcriptome_v1_shortHeader.fasta（nuc）  
 #### put the corresponding nucleotide sequences per species together (in orthofinder_input_nuc)  
