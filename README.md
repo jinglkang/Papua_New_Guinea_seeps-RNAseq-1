@@ -1,8 +1,36 @@
-# Papue_New_Guinea-RNA-seq
-
-### 1. after the running of OrthoFinder, select Orthogroup that contain at least one reads per species; and blastp to swiss-prot database, Orthogroups/Orthogroups.GeneCount.tsv is OrthoFinder result file; the qualified orthogroup will be in "./orthogroup_needed_sequences"; the blastp result will be in "blastp_result".  
-perl blastp_uni.pl Orthogroups/Orthogroups.GeneCount.tsv  
-### 2. select the most representative transcript for each species in each orthologous group. "./six_fishes_reads_num" includes reads number matrix of all species, which are used to select the trancript with one mapped reads. the final orthologous group will be in "./final_blast_orth_group".  
-perl get_best_blast_orthogroup.pl -blast_result=blastp_result -reads_matrix=six_fishes_reads_num  
-### 3. obtain the new reference per species by concatenated the final orthologous gene set. The input is the ortholog group in "final_blast_orth_group" and the nucleotide sequence of de novo sequences of all species (the fasta files are in "./orthofinder_input_nuc"), it will concatenate transcript according to the orthologous group of each species, the references of each species will be in "./final_reference".    
-./get_sequences_ref.pl -input=final_blast_orth_group -nuc=./orthofinder_input_nuc -output=final_reference
+# Papue_New_Guinea-RNA-seq    
+  
+## 1. Quality Control    
+1-Quality_Control.md    
+  
+## 2. _de novo_    
+2-denovo.md    
+  
+## 3. Orthologous gene detection    
+3-ortholog_DEGs_detection.md  
+### 3.1 blastp_uni.pl  
+#### after the running of OrthoFinder, select Orthogroup that contain at least one reads per species; and blastp to swiss-prot database, Orthogroups/Orthogroups.GeneCount.tsv is OrthoFinder result file; the qualified orthogroup will be in "./orthogroup_needed_sequences"; the blastp result will be in "blastp_result".    
+<table><tr><td bgcolor=orange>perl blastp_uni.pl Orthogroups/Orthogroups.GeneCount.tsv<table><tr><td bgcolor=orange>    
+  
+### 3.2 perl get_best_blast_orthogroup.pl  
+#### select the most representative transcript for each species in each orthologous group. "./six_fishes_reads_num" includes reads number matrix of all species, which are used to select the trancript with one mapped reads. the final orthologous group will be in "./final_blast_orth_group".    
+<table><tr><td bgcolor=orange>perl get_best_blast_orthogroup.pl -blast_result=blastp_result -reads_matrix=six_fishes_reads_num<table><tr><td bgcolor=orange>    
+  
+### 3.3 get_sequences_ref.pl  
+#### obtain the new reference per species by concatenated the final orthologous gene set. The input is the ortholog group in "final_blast_orth_group" and the nucleotide sequence of de novo sequences of all species (the fasta files are in "./orthofinder_input_nuc"), it will concatenate transcript according to the orthologous group of each species, the references of each species will be in "./final_reference".      
+<table><tr><td bgcolor=orange>./get_sequences_ref.pl -input=final_blast_orth_group -nuc=./orthofinder_input_nuc -output=final_reference<table><tr><td bgcolor=orange>    
+  
+### 3.4 merge_RSEM_frag_counts_single_table.pl  
+#### revised merge_RSEM_frag_counts_single_table.pl from RSEM, remove the suffix of the sample name and get the integer reads number  
+<table><tr><td bgcolor=orange>./merge_RSEM_frag_counts_single_table.pl \*RSEM_result_file <table><tr><td bgcolor=orange>     
+  
+## 4. Assessment  
+4-assessment.md  
+  
+## 5. SNPs calling  
+5-SNPs_calling.md  
+#### perl gatk_rna.pl: --fasta <reference fasta file> --tmp <buffer memory space of GATK> --out <result_directory>  
+<table><tr><td bgcolor=orange>perl gatk_rna.pl --fasta ./Acura.fa --bam . --tmp tmp --output Acura_gatk >Acura_gatk.process<table><tr><td bgcolor=orange>    
+#### transform vcf file to SNP genetype file, which could be used in BayeScan    
+#### need provide the information of sample in which population    
+<table><tr><td bgcolor=orange>perl vcf_bayescan.pl --vcf Acomp.all.snp.final.passed-1.vcf --pop_def sample_def.txt --id_correlation_num  loci-numb-id.bayescan >Acomp_bayecan.input<table><tr><td bgcolor=orange>    
