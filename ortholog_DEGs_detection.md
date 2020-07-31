@@ -223,7 +223,7 @@ perl -e '@files=<*.genes.results>;print "./merge_RSEM_frag_counts_single_table.p
 sh merge.sh >total_species.gene.matrix  
   
 #######################################################  
-## the reads number matrixes could be used in DEGs detection by DESeq2, generate sample information 
+## these reads number matrixes could be used in DEGs detection by DESeq2   
 #######################################################  
 
 ######################################  
