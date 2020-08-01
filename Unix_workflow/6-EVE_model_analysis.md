@@ -18,7 +18,7 @@ nohup perl get_sequence_of_orthogroup.pl -fasta=all.fasta -blast_result=final_bl
 nohup perl glocks_process.pl -input final_orth_sequences -gblocks_output Gblocks_output -long_seq Gblocks_output_long_than_50 >gblocks.process 2>&1 &  
 #### 1.1.3 concatenate all sequences in ./Gblocks_output_long_than_50 according orthogroup id by species  
 vi temp1.pl  
-# concatenated all orthogroups (condons > 50)  
+##### concatenated all orthogroups (condons > 50)  
 @fas=<Gblocks_output_long_than_50/*.fas>;  
 foreach $fas (@fas) {  
 
@@ -63,8 +63,7 @@ Alignment can be successfully read by RAxML-NG.
 raxml-ng --bootstrap --msa T1.raxml.rba --model LG+G4 --prefix T2 --threads 32 --seed 2 --tree pars{50},rand{50} --bs-cutoff 0.01 >raxml-ng.process 2>&1 &  
 raxml-ng --bsconverge --bs-trees T2.raxml.bootstraps --prefix T3 --seed 2 --threads 2 --bs-cutoff 0.01  
 Performing bootstrap convergence assessment using autoMRE criterion  
-  
- # trees        avg WRF       avg WRF in %       # perms: wrf <= 1.00 %     converged?  
+    trees        avg WRF       avg WRF in %       # perms: wrf <= 1.00 %     converged?  
       50          0.000              0.000                         1000        YES  
 Bootstopping test converged after 50 trees  
   
