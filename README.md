@@ -34,3 +34,15 @@ Example: perl gatk_rna.pl --fasta ./Acura.fa --bam . --tmp tmp --output Acura_ga
 #### transform vcf file to SNP genetype file, which could be used in BayeScan    
 #### need provide the information of sample in which population    
 Example: perl vcf_bayescan.pl --vcf Acomp.all.snp.final.passed-1.vcf --pop_def sample_def.txt --id_correlation_num  loci-numb-id.bayescan >Acomp_bayecan.input    
+
+## 6. EVE model analysis
+6-EVE_model_analysis.md
+#### get_sequence_of_orthogroup.pl: get the protein sequences of each transcript from the ORFs fasta files of each species and do the alignment by clustalo  
+#### -output "direcotry that store orthologous groups (fasta files contain the sequences of each transcript per species)"  
+Example: perl get_sequence_of_orthogroup.pl -fasta=all.fasta -blast_result=final_blast_orth_group -output=final_orth_sequences  
+
+#### perl glocks_process.pl: -input "alignment of fasta files" -Gblocks_output "Gblocks output directory" -long_seq "Gblocks output direcotry that each fasta with more than 50 codons"  
+Exaple: perl glocks_process.pl -input final_orth_sequences -gblocks_output Gblocks_output -long_seq Gblocks_output_long_than_50  
+
+#### fasta2phy.pl: transformed fasta file to phylip format  
+perl fasta2phy.pl concatenate.fas >concatenate.phy  
